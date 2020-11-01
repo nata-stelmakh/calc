@@ -6,7 +6,7 @@ class Calculator {
   }
   clear() {
     this.currentOperand = "";
-    this.previousOpearnd = "";
+    this.previousOperand = "";
     this.operation = undefined;
   }
   delete() {}
@@ -16,14 +16,38 @@ class Calculator {
   }
   chooseOperation(operation) {
     if (this.currentOperand === "") return;
-    if (this.previousOpearnd !== "") {
+    if (this.previousOperand !== "") {
       this.compute();
     }
     this.operation = operation;
-    this.previousOpearnd = this.currentOperand;
+    this.previousOperand = this.currentOperand;
     this.currentOperand = "";
   }
-  compute() {}
+  compute() {
+    let computation;
+    const prev = parseFloat(this.previousOperand);
+    const current = parseFloat(this.currentOperand);
+    if (isNaN(prev) || isNaN(current)) return;
+    switch (this.operation) {
+      case "+":
+        computation = prev + current;
+        break;
+      case "-":
+        computation = prev - current;
+        break;
+      case "/":
+        computation = prev / current;
+        break;
+      case "*":
+        computation = prev * current;
+        break;
+      default:
+        return;
+    }
+    this.currentOperand = computation;
+    this.operation = undefined;
+    this.previousOperand = "";
+  }
   updateDisplay() {
     this.currentOperandTextElement.innerText = this.currentOperand;
     this.previousOperandTextElement.innerText = this.previousOperand;
@@ -59,4 +83,14 @@ operationButtons.forEach((button) => {
     calculator.chooseOperation(button.innerText);
     calculator.updateDisplay();
   });
+});
+
+equalsButton.addEventListener("click", (button) => {
+  calculator.compute();
+  calculator.updateDisplay();
+});
+
+allClearButton.addEventListener("click", (button) => {
+  calculator.clear();
+  calculator.updateDisplay();
 });
