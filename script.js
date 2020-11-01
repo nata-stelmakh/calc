@@ -9,7 +9,9 @@ class Calculator {
     this.previousOperand = "";
     this.operation = undefined;
   }
-  delete() {}
+  delete() {
+    this.currentOperand = this.currentOperand.toString().slice(0, -1);
+  }
   appendNumber(number) {
     if (number === "." && this.currentOperand.includes(".")) return;
     this.currentOperand = this.currentOperand.toString() + number.toString();
@@ -48,8 +50,17 @@ class Calculator {
     this.operation = undefined;
     this.previousOperand = "";
   }
+
+  getDisplayNumber(number) {
+    const floatNumber = parseFloat(number);
+    if (isNaN(floatNumber)) return "";
+    return floatNumber.toLocaleString("en");
+  }
   updateDisplay() {
     this.currentOperandTextElement.innerText = this.currentOperand;
+    if (this.operation != null) {
+      this.previousOperandTextElement = `${this.previousOperand} ${this.operation}`;
+    }
     this.previousOperandTextElement.innerText = this.previousOperand;
   }
 }
@@ -92,5 +103,10 @@ equalsButton.addEventListener("click", (button) => {
 
 allClearButton.addEventListener("click", (button) => {
   calculator.clear();
+  calculator.updateDisplay();
+});
+
+deleteButton.addEventListener("click", (button) => {
+  calculator.delete();
   calculator.updateDisplay();
 });
